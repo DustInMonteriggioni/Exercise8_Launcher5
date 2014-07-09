@@ -4,7 +4,6 @@ package com.example.exercise8_launcher5;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,8 +38,11 @@ public class AppListLongClickMenu implements OnCreateContextMenuListener
 				public boolean onMenuItemClick(MenuItem item)
 				{
 					// TODO Auto-generated method stub
-					GridView gridView = (GridView)MA.deskTop.findViewById(R.id.gridview);
 					MA.AISC.deskTopApps.add(appInfo);
+					// changing exists in the list, thus write file
+					MA.AISC.writeIntoFiles();
+					
+					GridView gridView = (GridView)MA.deskTop.findViewById(R.id.gridview);
 					gridView.setAdapter(new iGridAdapter(MA));
 					return true;
 				}
@@ -52,10 +54,12 @@ public class AppListLongClickMenu implements OnCreateContextMenuListener
 				public boolean onMenuItemClick(MenuItem item)
 				{
 					// TODO Auto-generated method stub
-					ListView listView = (ListView)MA.allApps.findViewById(R.id.listview);
 					MA.AISC.listApps_hidden.add(appInfo);
-					Log.i("testing", "testing: OK here~");
 					MA.AISC.listApps_shown.remove(appInfo);
+					// changing exists in the list, thus write file
+					MA.AISC.writeIntoFiles();
+					
+					ListView listView = (ListView)MA.allApps.findViewById(R.id.listview);
 					listView.setAdapter(new iListAdapter(MA));
 					return true;
 				}

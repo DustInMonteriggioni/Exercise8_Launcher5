@@ -41,10 +41,13 @@ public class AppChangeReceiver extends BroadcastReceiver
     		{	// the installed app can be launched, which should be 
     				// in the launcher, thus need to update
     			MA.AISC.updateOnChange(packageName, AppInfoStorageCenter.ADD_APP);
+    			// changing exists in the list, thus write file
+				MA.AISC.writeIntoFiles();
+				
     			GridView gridView = (GridView)MA.deskTop.findViewById(R.id.gridview);
     			ListView listView = (ListView)MA.allApps.findViewById(R.id.listview);
     			gridView.setAdapter(new iGridAdapter(MA));
-    			listView.setAdapter(new iListAdapter(MA));   			
+    			listView.setAdapter(new iListAdapter(MA));
     		}	
         }     
     	
@@ -53,6 +56,9 @@ public class AppChangeReceiver extends BroadcastReceiver
         {   
         	// no launch intent check, because it is always null if uninstalled
         	MA.AISC.updateOnChange(packageName, AppInfoStorageCenter.REMOVE_APP);
+        	// changing exists in the list, thus write file
+			MA.AISC.writeIntoFiles();
+        	
 			GridView gridView = (GridView)MA.deskTop.findViewById(R.id.gridview);
     		ListView listView = (ListView)MA.allApps.findViewById(R.id.listview);
     		gridView.setAdapter(new iGridAdapter(MA));

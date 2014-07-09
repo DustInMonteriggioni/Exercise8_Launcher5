@@ -7,9 +7,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 @SuppressWarnings("serial")
-public class AppList extends ArrayList<AppInfo>
+public class ListApp extends ArrayList<AppInfo>
 {	
-	public void updateList(PackageManager pm)
+	public void copyFrom(PackageManager pm)
 	{	
 		List<PackageInfo> packages = pm.getInstalledPackages(0);
 		this.clear();

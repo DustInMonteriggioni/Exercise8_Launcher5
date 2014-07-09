@@ -59,7 +59,7 @@ public class MainActivity extends FragmentActivity
 		
 		pm = getPackageManager();
 
-		AISC = new AppInfoStorageCenter(pm);	// reading files in the onStart()
+		AISC = new AppInfoStorageCenter(this);	// reading files in the onStart()
 		
 		// prepare the two layouts of the launcher
 		LayoutInflater Li = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -206,7 +206,8 @@ public class MainActivity extends FragmentActivity
 	@Override 
 	public void onDestroy()
 	{   
-		AISC.writeIntoFiles();
+		// not write files here because the lists will be empty
+		//AISC.writeIntoFiles();
 		
 	    if(appChangeReceiver != null)     
 	        this.unregisterReceiver(appChangeReceiver);     
