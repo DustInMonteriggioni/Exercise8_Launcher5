@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.widget.GridView;
-import android.widget.ListView;
 
 
 public class AppChangeReceiver extends BroadcastReceiver
@@ -44,10 +42,8 @@ public class AppChangeReceiver extends BroadcastReceiver
     			// changing exists in the list, thus write file
 				MA.AISC.writeIntoFiles();
 				
-    			GridView gridView = (GridView)MA.deskTop.findViewById(R.id.gridview);
-    			ListView listView = (ListView)MA.allApps.findViewById(R.id.listview);
-    			gridView.setAdapter(new iGridAdapter(MA));
-    			listView.setAdapter(new iListAdapter(MA));
+    			MA.deskTop.update();
+    			MA.listApps.update();
     		}	
         }     
     	
@@ -59,10 +55,8 @@ public class AppChangeReceiver extends BroadcastReceiver
         	// changing exists in the list, thus write file
 			MA.AISC.writeIntoFiles();
         	
-			GridView gridView = (GridView)MA.deskTop.findViewById(R.id.gridview);
-    		ListView listView = (ListView)MA.allApps.findViewById(R.id.listview);
-    		gridView.setAdapter(new iGridAdapter(MA));
-    		listView.setAdapter(new iListAdapter(MA));	
+			MA.deskTop.update();
+    		MA.listApps.update();
         }     
     }     
 }

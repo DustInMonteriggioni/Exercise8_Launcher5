@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.Menu;
 
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.support.v4.app.Fragment;
@@ -15,10 +14,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 
 public class MainActivity extends FragmentActivity 
 {
@@ -41,12 +36,9 @@ public class MainActivity extends FragmentActivity
 	PackageManager pm;
 	
 	AppInfoStorageCenter AISC;
-	/*
-	AppInfoList allAppList; // app info storage
-	ArrayList<AppInfo> invisiableAppList;	// invisible in the allApps
-	AppInfoList deskTopAppList;
-	*/
-	LinearLayout deskTop, allApps; // the layouts to be passed into the fragment
+	
+	DeskTop deskTop;
+	ListApps listApps;
 	
 	BroadcastReceiver appChangeReceiver;
 	
@@ -54,7 +46,8 @@ public class MainActivity extends FragmentActivity
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);	// 去除顶部的标题栏
+		// 去除顶部的标题栏, already setted in the manifest.xml
+		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		
 		pm = getPackageManager();
@@ -62,16 +55,8 @@ public class MainActivity extends FragmentActivity
 		AISC = new AppInfoStorageCenter(this);	// reading files in the onStart()
 		
 		// prepare the two layouts of the launcher
-		LayoutInflater Li = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		deskTop = (LinearLayout) Li.inflate(R.layout.fragment_grid, null);
-		allApps = (LinearLayout) Li.inflate(R.layout.fragment_linear, null);
-		// the content of the two layouts
-		GridView gridView = (GridView)deskTop.findViewById(R.id.gridview);
-		ListView listView = (ListView)allApps.findViewById(R.id.listview);
-		gridView.setAdapter(new iGridAdapter(this));
-		listView.setAdapter(new iListAdapter(this));
-		
-		
+		deskTop = new DeskTop(this);
+		listApps = new ListApps(this);
 		
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
@@ -79,13 +64,11 @@ public class MainActivity extends FragmentActivity
 				new SectionsPagerAdapter(getSupportFragmentManager());
 		
 		// Set up the ViewPager with the sections adapter.
-		mViewPager = (ViewPager) findViewById(R.id.pager);
+		mViewPager = (ViewPager) findViewById(R.id.MainActivity);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 	}
 
-	
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
@@ -94,6 +77,8 @@ public class MainActivity extends FragmentActivity
 		return true;
 	}
 
+	
+	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
@@ -110,7 +95,7 @@ public class MainActivity extends FragmentActivity
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
 			DummySectionFragment DSF = new DummySectionFragment();
-			DSF.setViews(MainActivity.this.deskTop, MainActivity.this.allApps);
+			DSF.setViews(MainActivity.this.deskTop, MainActivity.this.listApps);
 			Fragment fragment = (Fragment) DSF;
 			Bundle args = new Bundle();
 			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
@@ -154,14 +139,15 @@ public class MainActivity extends FragmentActivity
 		 */
 		public static final String ARG_SECTION_NUMBER = "section_number";
 		
-		LinearLayout deskTop, allApps;
+		DeskTop deskTop;
+		ListApps listApps;
 
 		public DummySectionFragment() {}
 		
-		public void setViews(LinearLayout dt, LinearLayout aa)
+		public void setViews(DeskTop dt, ListApps la)
 		{	
 			deskTop = dt;
-			allApps = aa;
+			listApps = la;
 		}
 		
 		@Override
@@ -172,14 +158,10 @@ public class MainActivity extends FragmentActivity
 			View rootView = null;
 			switch (fragmentNo)
 			{	case 1:
-					rootView = inflater.inflate(R.layout.fragment_grid,
-						container, false);
-					rootView = deskTop;
+					rootView = deskTop.mainLayout;
 					break;
 				case 2:
-					rootView = inflater.inflate(R.layout.fragment_linear,
-							container, false);
-					rootView = allApps;
+					rootView = listApps.mainLayout;
 					break;
 			}
 			return rootView;

@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem.OnMenuItemClickListener;
-import android.widget.GridView;
-import android.widget.ListView;
 
 
 public class AppListLongClickMenu implements OnCreateContextMenuListener
@@ -42,8 +40,7 @@ public class AppListLongClickMenu implements OnCreateContextMenuListener
 					// changing exists in the list, thus write file
 					MA.AISC.writeIntoFiles();
 					
-					GridView gridView = (GridView)MA.deskTop.findViewById(R.id.gridview);
-					gridView.setAdapter(new iGridAdapter(MA));
+					MA.deskTop.update();
 					return true;
 				}
 			});
@@ -59,8 +56,7 @@ public class AppListLongClickMenu implements OnCreateContextMenuListener
 					// changing exists in the list, thus write file
 					MA.AISC.writeIntoFiles();
 					
-					ListView listView = (ListView)MA.allApps.findViewById(R.id.listview);
-					listView.setAdapter(new iListAdapter(MA));
+					MA.listApps.update();
 					return true;
 				}
 			});
