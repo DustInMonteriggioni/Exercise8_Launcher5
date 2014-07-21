@@ -18,7 +18,7 @@ public class iListAdapter extends BaseAdapter
 	// width and height in the list, different from that in the grid
 	int iconWidth;
 	int iconHeight;
-	AppInfoList allAppList;
+	AppInfoList listApps_shown;
 	MainActivity MA;
 	
 	@SuppressWarnings("deprecation")
@@ -32,21 +32,21 @@ public class iListAdapter extends BaseAdapter
 		int screenHeight=wm.getDefaultDisplay().getHeight();	//手机屏幕的高度
 		iconWidth = iconHeight = (int)screenHeight / 10;
 		
-		allAppList = MA.AISC.listApps_shown;
+		listApps_shown = MA.AISC.listApps;
 	}
 	
 	public int getCount() 
-	{	return allAppList.size();	}
+	{	return listApps_shown.size();	}
 
 	public Object getItem(int position) 
-	{	return allAppList.get(position);	}
+	{	return listApps_shown.get(position);	}
 
 	public long getItemId(int position) 
 	{	return position;	}
 
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		final AppInfo appInfo = allAppList.get(position);
+		final AppInfo appInfo = listApps_shown.get(position);
 		// at start, the app_row in the position is empty, thus convertView == null
 		if (convertView == null) // entered when the row is created
 		{	LayoutInflater vi = (LayoutInflater)MA.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -74,7 +74,7 @@ public class iListAdapter extends BaseAdapter
 		});
 		
 		// set the long click menu
-		appRow.setOnCreateContextMenuListener(new AppListLongClickMenu(MA, appInfo));
+		appRow.setOnCreateContextMenuListener(new ListAppsLongClickMenu(MA, appInfo));
 		
 		return convertView;
 	}

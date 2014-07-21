@@ -8,5 +8,6 @@
     <string name="title_section3">Section 3</string>
     <string name="search_box">Search box here~</string>
     <string name="settings_activity_title">软件设置</string>
+    <string name="choose_apps">选择需要显示的应用程序</string>
 
 </resources>

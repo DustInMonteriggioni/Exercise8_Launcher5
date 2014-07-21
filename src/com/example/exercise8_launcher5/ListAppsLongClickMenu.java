@@ -12,12 +12,12 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem.OnMenuItemClickListener;
 
 
-public class AppListLongClickMenu implements OnCreateContextMenuListener
+public class ListAppsLongClickMenu implements OnCreateContextMenuListener
 {
 	MainActivity MA;
 	AppInfo appInfo;
 	
-	public AppListLongClickMenu(MainActivity ma, AppInfo theInfo)
+	public ListAppsLongClickMenu(MainActivity ma, AppInfo theInfo)
 	{	
 		MA = ma;
 		appInfo = theInfo;
@@ -36,7 +36,7 @@ public class AppListLongClickMenu implements OnCreateContextMenuListener
 				public boolean onMenuItemClick(MenuItem item)
 				{
 					// TODO Auto-generated method stub
-					MA.AISC.deskTopApps.add(appInfo);
+					MA.AISC.deskTopApps.addAppInfo(appInfo.packageName);
 					// changing exists in the list, thus write file
 					MA.AISC.writeIntoFiles();
 					
@@ -50,9 +50,10 @@ public class AppListLongClickMenu implements OnCreateContextMenuListener
 				@Override
 				public boolean onMenuItemClick(MenuItem item)
 				{
-					// TODO Auto-generated method stub
-					MA.AISC.listApps_hidden.add(appInfo);
-					MA.AISC.listApps_shown.remove(appInfo);
+					String thePackageName = appInfo.packageName;
+					
+					MA.AISC.allApps.findAppInfo(thePackageName).visible = false;
+					MA.AISC.listApps.delAppInfo(thePackageName);
 					// changing exists in the list, thus write file
 					MA.AISC.writeIntoFiles();
 					

@@ -11,11 +11,49 @@ import java.util.List;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 
 @SuppressWarnings("serial")
 public class AppInfoList extends ArrayList<AppInfo>
 {	
-	public void delAppInfoFromList(String thePackageName)
+	PackageManager pm;
+	
+	public AppInfoList(PackageManager thePm)
+	{	
+		super();
+		pm = thePm;
+	}
+	
+	public boolean hasAppInfo(String thePackageName)
+	{	
+		for (AppInfo appInfo : this)
+			if (appInfo.packageName.equals(thePackageName))
+				return true;
+		return false;
+	}
+	
+	public AppInfo findAppInfo(String thePackageName)
+	{	
+		for (AppInfo appInfo : this)
+			if (appInfo.packageName.equals(thePackageName))
+				return appInfo;
+		return null;
+	}
+	
+	public void addAppInfo(String thePackageName)
+	{	
+		if (this.hasAppInfo(thePackageName))
+			return;
+		// else... 
+		PackageInfo packageInfo = null;
+		try 
+			{packageInfo = pm.getPackageInfo(thePackageName, 0);}
+		catch (NameNotFoundException e) {e.printStackTrace();}
+		AppInfo appInfo = new AppInfo(packageInfo, pm);
+		this.add(appInfo);
+	}
+	
+	public void delAppInfo(String thePackageName)
 	{	
 		// to avoid java.util.concurrentmodificationexception
 		AppInfo appInfoToDel = null;
@@ -29,7 +67,7 @@ public class AppInfoList extends ArrayList<AppInfo>
 			this.remove(appInfoToDel);
 	}
 	
-	public void copyFromPM(PackageManager pm)
+	public void copyFromPM()
 	{	
 		List<PackageInfo> packages = pm.getInstalledPackages(0);
 		this.clear();
@@ -41,13 +79,19 @@ public class AppInfoList extends ArrayList<AppInfo>
 			}
 	}
 	
-	public void readFromFile(String file, PackageManager pm)
+	public void readFromFile(String file)
 	{
 		try 
 		{	BufferedReader reader = new BufferedReader(new FileReader(file));
+			String line;
 			String packageName;
-			while ( (packageName = reader.readLine()) != null )
-			{	AppInfo appInfo = new AppInfo(packageName, pm);
+			boolean visible;
+			while ( (line = reader.readLine()) != null )
+			{	int index = line.indexOf('\t');
+				packageName = line.substring(0, index);
+				visible = Boolean.parseBoolean(line.substring(index + 1));	// index = '\t'
+				AppInfo appInfo = new AppInfo(packageName, pm);
+				appInfo.visible = visible;
 				this.add(appInfo);
 			}
 			reader.close();
@@ -56,13 +100,14 @@ public class AppInfoList extends ArrayList<AppInfo>
 		catch (IOException e) {e.printStackTrace();}
 	}
 	
-	public void writeIntoFile(String file, PackageManager pm)
+	public void writeIntoFile(String file)
 	{
 		try 
 		{	BufferedWriter writer  = new BufferedWriter(new FileWriter(file, false));
 			for (AppInfo appInfo : this)
 			{	String packageName = appInfo.packageName;
-				writer.write(packageName + '\n');
+				boolean visible = appInfo.visible;
+				writer.write(packageName + '\t' + visible + '\n');
 			}
 			writer.flush();
 			writer.close();

@@ -44,7 +44,7 @@
                 </data>
             </intent-filter>
         </receiver>
-         -->
+        -->
          
 		<activity
             android:name="com.example.exercise8_launcher5.SettingsActivity"

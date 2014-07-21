@@ -11,6 +11,7 @@ public class AppInfo
 	public String appName = "";
 	public String packageName = "";
 	public Drawable appIcon = null;
+	public boolean visible = true;
 	
 	public AppInfo(PackageInfo packageInfo, PackageManager pm)
 	{	

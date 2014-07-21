@@ -3,9 +3,7 @@ package com.example.exercise8_launcher5;
 import java.io.File;
 import java.io.IOException;
 
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
 
 
@@ -13,8 +11,9 @@ public class AppInfoStorageCenter
 {	
 	AppInfoList allApps;
 	AppInfoList deskTopApps;
-	AppInfoList listApps_shown;
-	AppInfoList listApps_hidden;
+	AppInfoList listApps;	// the shown ones
+	//AppInfoList listApps_shown;
+	//AppInfoList listApps_hidden;
 	
 	MainActivity MA;
 	PackageManager pm;
@@ -22,9 +21,9 @@ public class AppInfoStorageCenter
 	final static int ADD_APP = 0;
 	final static int REMOVE_APP = -1;
 	static String DIR_NAME = null;
+	final static String ALL_APPS_FILENAME = "All Apps.txt";
 	final static String DESKTOP_APPS_FILENAME = "DeskTop Apps.txt";
-	final static String LISTAPP_SHOWN_FILENAME = "List Apps Shown.txt";
-	final static String LISTAPP_HIDDEN_FILENAME = "List Apps Hidden.txt";
+	final static String LIST_APPS_FILENAME = "List Apps.txt";
 	
 	public AppInfoStorageCenter(MainActivity ma)
 	{	
@@ -34,10 +33,11 @@ public class AppInfoStorageCenter
 		DIR_NAME = Environment.getExternalStorageDirectory().getPath()
 				+ '/' + MA.getString(R.string.app_name) + '/';
 		
-		allApps = new AppInfoList();
-		deskTopApps = new AppInfoList();
-		listApps_shown = new AppInfoList();
-		listApps_hidden = new AppInfoList();
+		allApps = new AppInfoList(pm);
+		deskTopApps = new AppInfoList(pm);
+		listApps = new AppInfoList(pm);
+		//listApps_shown = new AppInfoList(pm);
+		//listApps_hidden = new AppInfoList(pm);
 	}
 	
 	public void onFirstRun()
@@ -49,14 +49,16 @@ public class AppInfoStorageCenter
 		try
 		{	file = new File(DIR_NAME + DESKTOP_APPS_FILENAME);
 			file.createNewFile();
-			file = new File(DIR_NAME + LISTAPP_SHOWN_FILENAME);
+			file = new File(DIR_NAME + LIST_APPS_FILENAME);
 			file.createNewFile();
-			file = new File(DIR_NAME + LISTAPP_HIDDEN_FILENAME);
-			file.createNewFile();
+			//file = new File(DIR_NAME + LISTAPP_SHOWN_FILENAME);
+			//file.createNewFile();
+			//file = new File(DIR_NAME + LISTAPP_HIDDEN_FILENAME);
+			//file.createNewFile();
 		}catch (IOException ioe){ioe.printStackTrace();}
 		
-		allApps.copyFromPM(pm);
-		listApps_shown.copyFromPM(pm);
+		allApps.copyFromPM();
+		listApps.copyFromPM();
 		
 		// write into the files as soon as the list changes
 		writeIntoFiles();
@@ -67,24 +69,24 @@ public class AppInfoStorageCenter
 		// view updated in the AppChangeReceiver.onReceive()
 		// merely update the lists here
 		
-		allApps.copyFromPM(pm);
-		
 		if (typeOfUpdate == ADD_APP)
-		{	PackageInfo packageInfo = null;
-			try 
-				{packageInfo = pm.getPackageInfo(thePackageName, 0);}
-			catch (NameNotFoundException e) {e.printStackTrace();}
-			AppInfo appInfo = new AppInfo(packageInfo, pm);
-			listApps_shown.add(appInfo);
+		{	allApps.addAppInfo(thePackageName);
+			listApps.addAppInfo(thePackageName);
 		}
 		else // typeOfUpdata == REMOVE_APP
-		{	// check if the app is in the deskTop, if true, remove it
-			deskTopApps.delAppInfoFromList(thePackageName);
-			// check if the app is in the shown list app, if true, remove it
-			listApps_shown.delAppInfoFromList(thePackageName);
-			// check if the app is in the hidden app list, then remove it
-			listApps_hidden.delAppInfoFromList(thePackageName);
+		{	// check if the app is in the lists, if true, remove it
+			allApps.delAppInfo(thePackageName);
+			deskTopApps.delAppInfo(thePackageName);
+			listApps.delAppInfo(thePackageName);
 		}
+	}
+	
+	public void copyVisibleAppsIntoListApps()
+	{	
+		listApps.clear();
+		for (AppInfo appInfo : allApps)
+			if (appInfo.visible == true)
+				listApps.addAppInfo(appInfo.packageName);
 	}
 	
 	public void readFromFiles()
@@ -94,16 +96,18 @@ public class AppInfoStorageCenter
 		{	onFirstRun();
 			return;
 		}
-		deskTopApps.readFromFile(DIR_NAME + DESKTOP_APPS_FILENAME, pm);
-		listApps_shown.readFromFile(DIR_NAME + LISTAPP_SHOWN_FILENAME, pm);
-		listApps_hidden.readFromFile(DIR_NAME + LISTAPP_HIDDEN_FILENAME, pm);
+		allApps.readFromFile(DIR_NAME + ALL_APPS_FILENAME);
+		deskTopApps.readFromFile(DIR_NAME + DESKTOP_APPS_FILENAME);
+		listApps.readFromFile(DIR_NAME + LIST_APPS_FILENAME);
+		//listApps_hidden.readFromFile(DIR_NAME + LISTAPP_HIDDEN_FILENAME, pm);
 	}
 	
 	public void writeIntoFiles()
 	{	
-		deskTopApps.writeIntoFile(DIR_NAME + DESKTOP_APPS_FILENAME, pm);
-		listApps_shown.writeIntoFile(DIR_NAME + LISTAPP_SHOWN_FILENAME, pm);
-		listApps_hidden.writeIntoFile(DIR_NAME + LISTAPP_HIDDEN_FILENAME, pm);
+		allApps.writeIntoFile(DIR_NAME + ALL_APPS_FILENAME);
+		deskTopApps.writeIntoFile(DIR_NAME + DESKTOP_APPS_FILENAME);
+		listApps.writeIntoFile(DIR_NAME + LIST_APPS_FILENAME);
+		//listApps_hidden.writeIntoFile(DIR_NAME + LISTAPP_HIDDEN_FILENAME, pm);
 	}
 	
 }

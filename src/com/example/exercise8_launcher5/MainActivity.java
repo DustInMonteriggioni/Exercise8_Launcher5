@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.Menu;
 
 import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -68,7 +72,7 @@ public class MainActivity extends FragmentActivity
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 	}
-
+	/*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
@@ -76,7 +80,7 @@ public class MainActivity extends FragmentActivity
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
+	*/
 	
 	
 	/**
@@ -95,7 +99,8 @@ public class MainActivity extends FragmentActivity
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
 			DummySectionFragment DSF = new DummySectionFragment();
-			DSF.setViews(MainActivity.this.deskTop, MainActivity.this.listApps);
+			DSF.setParameters
+				(MainActivity.this, MainActivity.this.deskTop, MainActivity.this.listApps);
 			Fragment fragment = (Fragment) DSF;
 			Bundle args = new Bundle();
 			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
@@ -141,13 +146,22 @@ public class MainActivity extends FragmentActivity
 		
 		DeskTop deskTop;
 		ListApps listApps;
+		MainActivity MA;
 
 		public DummySectionFragment() {}
 		
-		public void setViews(DeskTop dt, ListApps la)
+		public void setParameters(MainActivity ma,DeskTop dt, ListApps la)
 		{	
+			MA = ma;
 			deskTop = dt;
 			listApps = la;
+		}
+		
+		@Override
+		public void onCreate(Bundle savedInstanceState)
+		{	
+			super.onCreate(savedInstanceState);
+			setHasOptionsMenu(true);	// menu won't be created without this
 		}
 		
 		@Override
@@ -165,6 +179,104 @@ public class MainActivity extends FragmentActivity
 					break;
 			}
 			return rootView;
+		}
+		
+		@Override
+		public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) 
+		{
+			super.onCreateOptionsMenu(menu, inflater);
+			
+			int fragmentNo = getArguments().getInt(ARG_SECTION_NUMBER);
+			switch (fragmentNo)
+			{	
+				case 1:
+					createMenu_deskTop(menu);
+					break;
+				case 2:
+					createMenu_listApps(menu);
+					break;
+			}
+		}
+		
+		private void createMenu_deskTop(Menu menu)
+		{	
+			menu.add("添加磁块")
+				.setOnMenuItemClickListener(new OnMenuItemClickListener() 
+				{
+					@Override
+					public boolean onMenuItemClick(MenuItem arg0) 
+					{
+						return false;
+					}
+				});
+			menu.add("桌面设置")
+				.setOnMenuItemClickListener(new OnMenuItemClickListener()
+				{
+					@Override
+					public boolean onMenuItemClick(MenuItem arg0) 
+					{
+						Intent intent = new Intent(MA, SettingsActivity.class);
+						startActivity(intent);
+						return true;
+					}
+				});
+			menu.add("系统设置")
+				.setOnMenuItemClickListener(new OnMenuItemClickListener()
+				{	
+					@Override
+					public boolean onMenuItemClick(MenuItem arg0)
+					{
+						Intent intent
+							= new Intent(android.provider.Settings.ACTION_SETTINGS);
+						startActivity(intent);
+						return true;
+					}
+				});
+			menu.add("更换壁纸")
+				.setOnMenuItemClickListener(new OnMenuItemClickListener()
+				{	
+					@Override
+					public boolean onMenuItemClick(MenuItem arg0)
+					{
+						return false;
+					}
+				});
+		}
+		
+		private void createMenu_listApps(Menu menu)
+		{	
+			menu.add("列表排序")
+				.setOnMenuItemClickListener(new OnMenuItemClickListener() 
+				{
+					@Override
+					public boolean onMenuItemClick(MenuItem arg0) 
+					{
+						return false;
+					}
+				});
+			menu.add("添加/隐藏应用")
+				.setOnMenuItemClickListener(new OnMenuItemClickListener()
+				{
+					@Override
+					public boolean onMenuItemClick(MenuItem arg0) 
+					{
+						AllAppDialog dialog = new AllAppDialog(MA);
+						dialog.show();
+						
+						return true;
+					}
+				});
+			menu.add("列表设置")
+				.setOnMenuItemClickListener(new OnMenuItemClickListener()
+				{	
+					@Override
+					public boolean onMenuItemClick(MenuItem arg0)
+					{
+						Intent intent = new Intent(MA, SettingsActivity.class);
+						startActivity(intent);
+						return true;
+					}
+				});
 		}
 		
 	}
