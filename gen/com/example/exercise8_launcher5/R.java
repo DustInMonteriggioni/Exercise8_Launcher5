@@ -21,14 +21,20 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int search=0x7f020001;
-        public static final int settings=0x7f020002;
+        public static final int black=0x7f020000;
+        public static final int cloud=0x7f020001;
+        public static final int gray=0x7f020002;
+        public static final int home=0x7f020003;
+        public static final int ic_launcher=0x7f020004;
+        public static final int search=0x7f020005;
+        public static final int settings=0x7f020006;
+        public static final int silver=0x7f020007;
+        public static final int yellow=0x7f020008;
     }
     public static final class id {
         public static final int MainActivity=0x7f080000;
         public static final int SettingsActivity=0x7f080001;
-        public static final int action_settings=0x7f08000e;
+        public static final int action_settings=0x7f08000f;
         public static final int allApps_dialog=0x7f080004;
         public static final int appInfo=0x7f080006;
         public static final int applist=0x7f08000a;
@@ -41,6 +47,7 @@ public final class R {
         public static final int pager_title_strip=0x7f080002;
         public static final int search=0x7f08000b;
         public static final int settings=0x7f08000c;
+        public static final int wallPaperImageView=0x7f08000e;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -52,6 +59,7 @@ public final class R {
         public static final int app_row_dialog=0x7f030006;
         public static final int fragment_grid=0x7f030007;
         public static final int fragment_linear=0x7f030008;
+        public static final int wallpaper_imageview=0x7f030009;
     }
     public static final class menu {
         public static final int main=0x7f070000;

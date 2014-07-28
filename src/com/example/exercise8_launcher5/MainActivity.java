@@ -41,6 +41,8 @@ public class MainActivity extends FragmentActivity
 	
 	AppInfoStorageCenter AISC;
 	
+	WallPaperManager wpm;
+	
 	DeskTop deskTop;
 	ListApps listApps;
 	
@@ -56,14 +58,16 @@ public class MainActivity extends FragmentActivity
 		
 		pm = getPackageManager();
 
+		wpm = new WallPaperManager(this);	// wall paper set in the constructor
+		
 		AISC = new AppInfoStorageCenter(this);	// reading files in the onStart()
 		
 		// prepare the two layouts of the launcher
 		deskTop = new DeskTop(this);
 		listApps = new ListApps(this);
 		
-		// Create the adapter that will return a fragment for each of the three
-		// primary sections of the app.
+		// Create the adapter that will return a fragment for each of the two
+		// 	primary sections of the app.
 		mSectionsPagerAdapter = 
 				new SectionsPagerAdapter(getSupportFragmentManager());
 		
@@ -72,15 +76,6 @@ public class MainActivity extends FragmentActivity
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 	}
-	/*
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) 
-	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-	*/
 	
 	
 	/**
@@ -114,22 +109,6 @@ public class MainActivity extends FragmentActivity
 			// Show 2 total pages.
 			return 2;
 		}
-		
-		/*
-		@Override
-		public CharSequence getPageTitle(int position) 
-		{	
-			Locale l = Locale.getDefault();
-			switch (position) 
-			{	case 0:
-					return getString(R.string.title_section1).toUpperCase(l);
-				case 1:
-					return getString(R.string.title_section2).toUpperCase(l);
-			}
-			return null;
-		}
-		*/
-		
 	}
 
 	/**
@@ -150,7 +129,7 @@ public class MainActivity extends FragmentActivity
 
 		public DummySectionFragment() {}
 		
-		public void setParameters(MainActivity ma,DeskTop dt, ListApps la)
+		public void setParameters(MainActivity ma, DeskTop dt, ListApps la)
 		{	
 			MA = ma;
 			deskTop = dt;
@@ -202,81 +181,84 @@ public class MainActivity extends FragmentActivity
 		{	
 			menu.add("添加磁块")
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() 
+			{
+				@Override
+				public boolean onMenuItemClick(MenuItem arg0) 
 				{
-					@Override
-					public boolean onMenuItemClick(MenuItem arg0) 
-					{
-						return false;
-					}
-				});
+					return false;
+				}
+			});
 			menu.add("桌面设置")
 				.setOnMenuItemClickListener(new OnMenuItemClickListener()
+			{
+				@Override
+				public boolean onMenuItemClick(MenuItem arg0) 
 				{
-					@Override
-					public boolean onMenuItemClick(MenuItem arg0) 
-					{
-						Intent intent = new Intent(MA, SettingsActivity.class);
-						startActivity(intent);
-						return true;
-					}
-				});
+					Intent intent = new Intent(MA, SettingsActivity.class);
+					startActivity(intent);
+					return true;
+				}
+			});
 			menu.add("系统设置")
 				.setOnMenuItemClickListener(new OnMenuItemClickListener()
-				{	
-					@Override
-					public boolean onMenuItemClick(MenuItem arg0)
-					{
-						Intent intent
-							= new Intent(android.provider.Settings.ACTION_SETTINGS);
-						startActivity(intent);
-						return true;
-					}
-				});
+			{	
+				@Override
+				public boolean onMenuItemClick(MenuItem arg0)
+				{
+					Intent intent
+						= new Intent(android.provider.Settings.ACTION_SETTINGS);
+					startActivity(intent);
+					return true;
+				}
+			});
 			menu.add("更换壁纸")
 				.setOnMenuItemClickListener(new OnMenuItemClickListener()
-				{	
-					@Override
-					public boolean onMenuItemClick(MenuItem arg0)
-					{
-						return false;
-					}
-				});
+			{	
+				@Override
+				public boolean onMenuItemClick(MenuItem arg0)
+				{
+					WallPaperSelectDialog dialog = new WallPaperSelectDialog(MA);
+					dialog.show();
+					return true;
+				}
+			});
 		}
 		
 		private void createMenu_listApps(Menu menu)
 		{	
 			menu.add("列表排序")
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() 
+			{
+				@Override
+				public boolean onMenuItemClick(MenuItem arg0) 
 				{
-					@Override
-					public boolean onMenuItemClick(MenuItem arg0) 
-					{
-						return false;
-					}
-				});
+					ListAppsSortingDialog dialog = new ListAppsSortingDialog(MA);
+					dialog.show();
+					return true;
+				}
+			});
 			menu.add("添加/隐藏应用")
 				.setOnMenuItemClickListener(new OnMenuItemClickListener()
+			{
+				@Override
+				public boolean onMenuItemClick(MenuItem arg0) 
 				{
-					@Override
-					public boolean onMenuItemClick(MenuItem arg0) 
-					{
-						AllAppDialog dialog = new AllAppDialog(MA);
-						dialog.show();
-						
-						return true;
-					}
-				});
+					AllAppDialog dialog = new AllAppDialog(MA);
+					dialog.show();
+					return true;
+				}
+			});
 			menu.add("列表设置")
 				.setOnMenuItemClickListener(new OnMenuItemClickListener()
-				{	
-					@Override
-					public boolean onMenuItemClick(MenuItem arg0)
-					{
-						Intent intent = new Intent(MA, SettingsActivity.class);
-						startActivity(intent);
-						return true;
-					}
-				});
+			{	
+				@Override
+				public boolean onMenuItemClick(MenuItem arg0)
+				{
+					Intent intent = new Intent(MA, SettingsActivity.class);
+					startActivity(intent);
+					return true;
+				}
+			});
 		}
 		
 	}

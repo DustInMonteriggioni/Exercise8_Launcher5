@@ -20,16 +20,13 @@ import android.widget.ListView;
 
 
 @SuppressLint("NewApi")
-public class AllAppDialog //extends AlertDialog
+public class AllAppDialog
 {
-	
 	ListView listView;
 	MainActivity MA;
 	AlertDialog dialog;
-	// record the change of the checkboxes
-	//HashMap<String, Boolean> changeRecorder = null;
 	
-	protected AllAppDialog(Context context)
+	public AllAppDialog(Context context)
 	{
 		MA = (MainActivity) context;
 		Builder builder = new Builder(MA);
@@ -79,11 +76,11 @@ public class AllAppDialog //extends AlertDialog
 		
 	}
 	
-	
 	public void show()
 	{	
 		dialog.show();
 	}
+	
 	
 	
 	
