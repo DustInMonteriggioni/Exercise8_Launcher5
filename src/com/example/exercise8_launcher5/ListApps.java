@@ -38,14 +38,14 @@ public class ListApps
 			@Override
 			public void onClick(View arg0)
 			{
-				for (AppInfo appInfo : MA.AISC.allApps)
+				for (AppInfo appInfo : MA.getLauncherApplication().AISC.allApps)
 					if (appInfo.appName.equals("搜索")
 						|| appInfo.appName.equalsIgnoreCase("search"))
 					{	launchSearchbox(appInfo.packageName);
 						return;
 					}
 				// not found by name
-				for (AppInfo appInfo : MA.AISC.allApps)
+				for (AppInfo appInfo : MA.getLauncherApplication().AISC.allApps)
 					if (appInfo.packageName.contains("searchbox"))
 					{	launchSearchbox(appInfo.packageName);
 						return;
@@ -54,7 +54,8 @@ public class ListApps
 			
 			private void launchSearchbox(String thePackageName)
 			{	
-				Intent intent = MA.pm.getLaunchIntentForPackage(thePackageName);
+				Intent intent = 
+						MA.getPackageManager().getLaunchIntentForPackage(thePackageName);
 				MA.startActivity(intent); 
 			}
 		});
@@ -101,7 +102,7 @@ public class ListApps
 			int screenHeight=wm.getDefaultDisplay().getHeight();	//手机屏幕的高度
 			iconWidth = iconHeight = (int)screenHeight / 10;
 			
-			listApps_shown = MA.AISC.listApps;
+			listApps_shown = MA.getLauncherApplication().AISC.listApps;
 		}
 		
 		public int getCount() 

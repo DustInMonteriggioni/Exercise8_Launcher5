@@ -3,7 +3,6 @@ package com.example.exercise8_launcher5;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -31,8 +30,8 @@ public class WallPaperSelectDialog
 		
 		gridView = new GridView(MA);
 		gridView.setNumColumns(3);
-		//gridView.set
 		gridView.setAdapter(new WallPaperSelectDialog.iGridAdapter(MA));
+		gridView.setFocusable(false);
 		builder.setView(gridView);
 		
 		dialog = builder.create();
@@ -93,6 +92,8 @@ public class WallPaperSelectDialog
 			wallPaperCandidate.setLayoutParams
 				(new GridView.LayoutParams(iconWidth, iconHeight));
 			
+			wallPaperCandidate.setFocusable(true);
+			wallPaperCandidate.setClickable(true);
 			wallPaperCandidate.setOnClickListener(new OnClickListener() 
 			{
 				@Override

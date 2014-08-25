@@ -3,8 +3,10 @@ package com.example.exercise8_launcher5;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnDragListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
@@ -57,7 +59,7 @@ public class DeskTop
 			int screenHeight=wm.getDefaultDisplay().getHeight();	//手机屏幕的高度
 			iconWidth = iconHeight = (int)screenWidth / 4;
 			
-			deskTopAppList = MA.AISC.deskTopApps;
+			deskTopAppList = MA.getLauncherApplication().AISC.deskTopApps;
 		}
 		
 		public int getCount() 
@@ -98,6 +100,20 @@ public class DeskTop
 					MA.startActivity(intent); 
 				}
 			});
+			
+			// set the long click menu
+			appIcon.setOnCreateContextMenuListener(new DeskTopLongClickMenu(MA, appInfo));
+			
+			// set OnDragListener
+			appIcon.setOnDragListener(new OnDragListener()
+			{
+				@Override
+				public boolean onDrag(View arg0, DragEvent arg1)
+				{
+					return true;
+				}
+			});
+			
 			return appIcon;
 		}
 	}

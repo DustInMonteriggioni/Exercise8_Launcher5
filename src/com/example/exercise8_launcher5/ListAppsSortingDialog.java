@@ -22,22 +22,23 @@ public class ListAppsSortingDialog
 			@Override
 			public void onClick(DialogInterface arg0, int itemNo)
 			{
+				AppInfoStorageCenter AISC = MA.getLauncherApplication().AISC;
 				switch (itemNo)
 				{	
 					// in case that listApps might update, sort the allApps
 					// 	 to remember the sorting rule
 					case 0:
-						MA.AISC.allApps.sortByAlphabeticalOrder();
+						AISC.allApps.sortByAlphabeticalOrder();
 						break;
 					case 1:
-						MA.AISC.allApps.sortByFirstInstallTime();
+						AISC.allApps.sortByFirstInstallTime();
 						break;
 					case 2:
-						MA.AISC.allApps.sortByUseFrequency();
+						AISC.allApps.sortByUseFrequency();
 						break;
 				}
-				MA.AISC.copyVisibleAppsIntoListApps();
-				MA.AISC.writeIntoFiles();
+				AISC.copyVisibleAppsIntoListApps();
+				AISC.writeIntoFiles();
 				MA.listApps.update();
 			}
 		});

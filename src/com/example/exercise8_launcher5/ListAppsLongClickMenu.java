@@ -27,7 +27,8 @@ public class ListAppsLongClickMenu implements OnCreateContextMenuListener
 	public void onCreateContextMenu
 		(ContextMenu menu, View v,ContextMenuInfo menuInfo)
 	{
-		// TODO Auto-generated method stub
+		final AppInfoStorageCenter AISC = MA.getLauncherApplication().AISC;
+		
 		menu.setHeaderTitle("应用操作：");
 		menu.add("添加到桌面")
 			.setOnMenuItemClickListener(new OnMenuItemClickListener() 
@@ -35,10 +36,9 @@ public class ListAppsLongClickMenu implements OnCreateContextMenuListener
 			@Override
 			public boolean onMenuItemClick(MenuItem item)
 			{
-				// TODO Auto-generated method stub
-				MA.AISC.deskTopApps.addAppInfo(appInfo.packageName);
+				AISC.deskTopApps.addAppInfo(appInfo.packageName);
 				// changing exists in the list, thus write file
-				MA.AISC.writeIntoFiles();
+				AISC.writeIntoFiles();
 				
 				MA.deskTop.update();
 				return true;
@@ -52,10 +52,10 @@ public class ListAppsLongClickMenu implements OnCreateContextMenuListener
 			{
 				String thePackageName = appInfo.packageName;
 				
-				MA.AISC.allApps.findAppInfo(thePackageName).visible = false;
-				MA.AISC.listApps.delAppInfo(thePackageName);
+				AISC.allApps.findAppInfo(thePackageName).visible = false;
+				AISC.listApps.delAppInfo(thePackageName);
 				// changing exists in the list, thus write file
-				MA.AISC.writeIntoFiles();
+				AISC.writeIntoFiles();
 				
 				MA.listApps.update();
 				return true;
@@ -67,13 +67,14 @@ public class ListAppsLongClickMenu implements OnCreateContextMenuListener
 			@Override
 			public boolean onMenuItemClick(MenuItem item)
 			{
-				// TODO Auto-generated method stub
 				String packageName = appInfo.packageName;
 				Uri uri = Uri.parse("package:" + packageName);//获取删除包名的URI
 				Intent intent = new Intent();
 				intent.setAction(Intent.ACTION_DELETE);//设置我们要执行的卸载动作
 				intent.setData(uri);//设置获取到的URI
 				MA.startActivity(intent);
+				
+				AISC.updateOnChange(packageName, AppInfoStorageCenter.REMOVE_APP);
 				return true;
 			}
 		});
@@ -81,8 +82,8 @@ public class ListAppsLongClickMenu implements OnCreateContextMenuListener
 			.setOnMenuItemClickListener(new OnMenuItemClickListener()
 		{
 			@Override
-			public boolean onMenuItemClick(MenuItem arg0) {
-				// TODO Auto-generated method stub
+			public boolean onMenuItemClick(MenuItem item)
+			{
 				Intent intent = 
 						new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
 				Uri uri = Uri.fromParts("package", appInfo.packageName, null);  

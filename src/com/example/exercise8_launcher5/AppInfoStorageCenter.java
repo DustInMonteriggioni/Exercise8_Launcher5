@@ -12,8 +12,6 @@ public class AppInfoStorageCenter
 	AppInfoList allApps;
 	AppInfoList deskTopApps;
 	AppInfoList listApps;	// the shown ones
-	//AppInfoList listApps_shown;
-	//AppInfoList listApps_hidden;
 	
 	MainActivity MA;
 	PackageManager pm;
@@ -25,19 +23,16 @@ public class AppInfoStorageCenter
 	final static String DESKTOP_APPS_FILENAME = "DeskTop Apps.txt";
 	final static String LIST_APPS_FILENAME = "List Apps.txt";
 	
-	public AppInfoStorageCenter(MainActivity ma)
+	public AppInfoStorageCenter(LauncherApplication la)
 	{	
-		MA = ma;
-		pm = MA.pm;
+		pm = la.pm;
 		
 		DIR_NAME = Environment.getExternalStorageDirectory().getPath()
-				+ '/' + MA.getString(R.string.app_name) + '/';
+				+ '/' + la.getString(R.string.app_name) + '/';
 		
 		allApps = new AppInfoList(pm);
 		deskTopApps = new AppInfoList(pm);
 		listApps = new AppInfoList(pm);
-		//listApps_shown = new AppInfoList(pm);
-		//listApps_hidden = new AppInfoList(pm);
 	}
 	
 	public void onFirstRun()
@@ -51,14 +46,11 @@ public class AppInfoStorageCenter
 			file.createNewFile();
 			file = new File(DIR_NAME + LIST_APPS_FILENAME);
 			file.createNewFile();
-			//file = new File(DIR_NAME + LISTAPP_SHOWN_FILENAME);
-			//file.createNewFile();
-			//file = new File(DIR_NAME + LISTAPP_HIDDEN_FILENAME);
-			//file.createNewFile();
 		}catch (IOException ioe){ioe.printStackTrace();}
 		
 		allApps.copyFromPM();
-		listApps.copyFromPM();
+		allApps.sortByAlphabeticalOrder();
+		copyVisibleAppsIntoListApps();
 		
 		// write into the files as soon as the list changes
 		writeIntoFiles();
@@ -67,7 +59,7 @@ public class AppInfoStorageCenter
 	public void updateOnChange(String thePackageName, int typeOfUpdate) 
 	{	
 		// view updated in the AppChangeReceiver.onReceive()
-		// merely update the lists here
+		// merely update the lists and files here
 		
 		if (typeOfUpdate == ADD_APP)
 		{	allApps.addAppInfo(thePackageName);
@@ -79,6 +71,7 @@ public class AppInfoStorageCenter
 			deskTopApps.delAppInfo(thePackageName);
 			listApps.delAppInfo(thePackageName);
 		}
+		writeIntoFiles();
 	}
 	
 	public void copyVisibleAppsIntoListApps()
@@ -99,7 +92,6 @@ public class AppInfoStorageCenter
 		allApps.readFromFile(DIR_NAME + ALL_APPS_FILENAME);
 		deskTopApps.readFromFile(DIR_NAME + DESKTOP_APPS_FILENAME);
 		listApps.readFromFile(DIR_NAME + LIST_APPS_FILENAME);
-		//listApps_hidden.readFromFile(DIR_NAME + LISTAPP_HIDDEN_FILENAME, pm);
 	}
 	
 	public void writeIntoFiles()
@@ -107,7 +99,6 @@ public class AppInfoStorageCenter
 		allApps.writeIntoFile(DIR_NAME + ALL_APPS_FILENAME);
 		deskTopApps.writeIntoFile(DIR_NAME + DESKTOP_APPS_FILENAME);
 		listApps.writeIntoFile(DIR_NAME + LIST_APPS_FILENAME);
-		//listApps_hidden.writeIntoFile(DIR_NAME + LISTAPP_HIDDEN_FILENAME, pm);
 	}
 	
 }

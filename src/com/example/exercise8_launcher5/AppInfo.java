@@ -20,12 +20,10 @@ public class AppInfo
 		packageName = packageInfo.packageName;
 	}
 	
-	public AppInfo(String thePackageName, PackageManager pm)
+	public AppInfo(String thePackageName, PackageManager pm) throws NameNotFoundException
 	{	
 		PackageInfo packageInfo = null;
-		try 
-		{packageInfo = pm.getPackageInfo(thePackageName, 0);}
-		catch (NameNotFoundException e) {e.printStackTrace();}
+		packageInfo = pm.getPackageInfo(thePackageName, 0);
 		
 		appName = packageInfo.applicationInfo.loadLabel(pm).toString();
 		appIcon = packageInfo.applicationInfo.loadIcon(pm);

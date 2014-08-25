@@ -210,9 +210,13 @@ public class AppInfoList extends ArrayList<AppInfo>
 			{	int index = line.indexOf('\t');
 				packageName = line.substring(0, index);
 				visible = Boolean.parseBoolean(line.substring(index + 1));	// index = '\t'
-				AppInfo appInfo = new AppInfo(packageName, pm);
-				appInfo.visible = visible;
-				this.add(appInfo);
+				try 
+				{	AppInfo appInfo = new AppInfo(packageName, pm);
+					// if pachageName not found, don't add into list
+					appInfo.visible = visible;
+					this.add(appInfo);
+				} catch (NameNotFoundException e) {}
+				
 			}
 			reader.close();
 		}

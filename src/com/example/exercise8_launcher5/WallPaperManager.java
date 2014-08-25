@@ -42,7 +42,7 @@ public class WallPaperManager
 	public int loadWallPaperPref()
 	{	
 		// if there's no key "WallPaper", use R.drawable.home as default
-		return preferences.getInt(WALLPAPER, R.drawable.home);
+		return preferences.getInt(WALLPAPER, R.drawable.black);
 	}
 	
 }

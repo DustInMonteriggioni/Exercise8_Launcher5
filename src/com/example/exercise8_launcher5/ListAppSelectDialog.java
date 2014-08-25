@@ -20,22 +20,24 @@ import android.widget.ListView;
 
 
 @SuppressLint("NewApi")
-public class AllAppDialog
+public class ListAppSelectDialog
 {
-	ListView listView;
 	MainActivity MA;
+	AppInfoStorageCenter AISC;
 	AlertDialog dialog;
+	ListView listView;
 	
-	public AllAppDialog(Context context)
+	public ListAppSelectDialog(Context context)
 	{
 		MA = (MainActivity) context;
+		AISC = MA.getLauncherApplication().AISC;
 		Builder builder = new Builder(MA);
 		
 		builder.setTitle("选择需要显示的应用：");
 		
 		listView = 
 			(ListView) LayoutInflater.from(MA).inflate(R.layout.all_apps_dialog, null);
-		listView.setAdapter(new AllAppDialog.iListAdapter(MA));
+		listView.setAdapter(new ListAppSelectDialog.iListAdapter(MA));
 		
 		builder.setView(listView);
 		
@@ -45,9 +47,9 @@ public class AllAppDialog
 			public void onClick(DialogInterface arg0, int arg1) 
 			{
 				// keep the record setted in the list allApps and update relevant data
-				MA.AISC.copyVisibleAppsIntoListApps();
+				AISC.copyVisibleAppsIntoListApps();
 				// changes exists in the lists, thus write the files
-				MA.AISC.writeIntoFiles();
+				AISC.writeIntoFiles();
 				MA.listApps.update();
 			}
 		});
@@ -58,7 +60,7 @@ public class AllAppDialog
 			public void onClick(DialogInterface arg0, int arg1)
 			{
 				// user cancel to change, erase the change recorded in list allApps
-				MA.AISC.readFromFiles();
+				AISC.readFromFiles();
 			}
 		});
 		
@@ -68,7 +70,7 @@ public class AllAppDialog
 			public void onDismiss(DialogInterface arg0)
 			{
 				// dismissed, erase the change recorded in list allapps
-				MA.AISC.readFromFiles();
+				AISC.readFromFiles();
 			}
 		});
 		
@@ -103,7 +105,7 @@ public class AllAppDialog
 			int screenHeight=wm.getDefaultDisplay().getHeight();	//手机屏幕的高度
 			iconWidth = iconHeight = (int)screenHeight / 10;
 			
-			allAppList = MA.AISC.allApps;
+			allAppList = AISC.allApps;
 		}
 		
 		public int getCount() 
@@ -132,7 +134,7 @@ public class AllAppDialog
 			checkBox.setText(appInfo.appName);
 			checkBox.setCompoundDrawables(icon, null, null, null); //设置左图标
 			
-			if ( MA.AISC.allApps.findAppInfo(appInfo.packageName).visible == true )
+			if ( AISC.allApps.findAppInfo(appInfo.packageName).visible == true )
 				checkBox.setChecked(true);
 			else
 				checkBox.setChecked(false);
@@ -142,7 +144,7 @@ public class AllAppDialog
 				@Override
 				public void onCheckedChanged(CompoundButton arg0, boolean visible)
 				{
-					MA.AISC.allApps.findAppInfo(appInfo.packageName).visible = visible;
+					AISC.allApps.findAppInfo(appInfo.packageName).visible = visible;
 				}
 			});
 			
