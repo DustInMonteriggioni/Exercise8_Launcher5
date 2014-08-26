@@ -48,12 +48,20 @@ public class AppInfoStorageCenter
 			file.createNewFile();
 		}catch (IOException ioe){ioe.printStackTrace();}
 		
-		allApps.copyFromPM();
-		allApps.sortByAlphabeticalOrder();
-		copyVisibleAppsIntoListApps();
+		initAppInfoLists();
 		
 		// write into the files as soon as the list changes
 		writeIntoFiles();
+	}
+	
+	/**
+	 * allApps copy from PackageManager, sort, copy into listApps
+	 */
+	public void initAppInfoLists()
+	{	
+		allApps.copyFromPM();
+		allApps.sortByAlphabeticalOrder();
+		copyVisibleAppsIntoListApps();
 	}
 	
 	public void updateOnChange(String thePackageName, int typeOfUpdate) 

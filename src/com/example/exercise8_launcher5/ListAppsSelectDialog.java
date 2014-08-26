@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,24 +21,25 @@ import android.widget.ListView;
 
 
 @SuppressLint("NewApi")
-public class ListAppSelectDialog
+public class ListAppsSelectDialog
 {
 	MainActivity MA;
 	AppInfoStorageCenter AISC;
 	AlertDialog dialog;
 	ListView listView;
 	
-	public ListAppSelectDialog(Context context)
+	public ListAppsSelectDialog(LauncherApplication LA, Context context)
 	{
-		MA = (MainActivity) context;
+		MA = LA.MA;
 		AISC = MA.getLauncherApplication().AISC;
-		Builder builder = new Builder(MA);
+		Builder builder = new Builder(context);
 		
 		builder.setTitle("选择需要显示的应用：");
 		
 		listView = 
-			(ListView) LayoutInflater.from(MA).inflate(R.layout.all_apps_dialog, null);
-		listView.setAdapter(new ListAppSelectDialog.iListAdapter(MA));
+			(ListView) LayoutInflater.from(MA).inflate(R.layout.listapps_select_dialog, null);
+		listView.setBackgroundColor(Color.WHITE);
+		listView.setAdapter(new ListAppsSelectDialog.iListAdapter(MA));
 		
 		builder.setView(listView);
 		
@@ -124,7 +126,7 @@ public class ListAppSelectDialog
 			// always inflate one to avoid the check boxes disturb each other
 			//if (convertView == null) // entered when the row is created
 			LayoutInflater vi = (LayoutInflater)MA.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = vi.inflate(R.layout.app_row_dialog, null);
+			convertView = vi.inflate(R.layout.app_row_listapps_select_dialog, null);
 			convertView.setClickable(true);
 			
 			Drawable icon = appInfo.appIcon;
@@ -132,6 +134,7 @@ public class ListAppSelectDialog
 			icon.setBounds(0, 0, iconWidth, iconHeight);
 			CheckBox checkBox = (CheckBox)convertView.findViewById(R.id.checkBox_dialog); 
 			checkBox.setText(appInfo.appName);
+			checkBox.setTextColor(Color.BLACK);
 			checkBox.setCompoundDrawables(icon, null, null, null); //设置左图标
 			
 			if ( AISC.allApps.findAppInfo(appInfo.packageName).visible == true )

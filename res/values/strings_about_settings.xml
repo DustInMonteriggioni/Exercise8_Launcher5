@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">软件设置</string>
+    
+    <string name="settings_desktop_title">桌面设置</string>
+    	<string name="settings_desktop_column_number_title">列数</string>
+    	<string name="settings_desktop_column_number_default">4</string>
+	    <string-array name="settings_desktop_column_number_list"> 
+	        <item>3</item> 
+	        <item>4</item> 
+	        <item>5</item> 
+		</string-array>
+		
+	    <string name="settings_desktop_longclick_action_title">长按事件</string>
+	    <string name="settings_desktop_longclick_action_default">菜单</string>
+	    <string-array name="settings_desktop_longclick_action_list">
+	        <item>拖拽</item>
+	        <item>菜单</item>
+	    </string-array>
+	    
+    <string name="settings_listapps_title">程序列表设置</string>
+    	<string name="settings_listapps_textcolor_title">字体颜色</string>
+    	<string name="settings_listapps_textcolor_default">黑</string>
+    	<string-array name="settings_listapps_textcolor_list">
+    	    <item>黑</item>
+    	    <item>白</item>
+    	    <item>红</item>
+    	    <item>绿</item>
+    	</string-array>
+    	<string-array name="settings_listapps_textcolor_values">
+    	    <item>black</item>
+    	    <item>white</item>
+    	    <item>red</item>
+    	    <item>green</item>
+    	</string-array>
+    	
+    	<string name="settings_listapps_shown_app_select_title">
+    	    	选择显示的应用</string>
+    
+    	<string name="settings_listapps_refresh_listapps_title">
+    	    	刷新列表</string>
+    
+</resources>

@@ -9,6 +9,7 @@ public class LauncherApplication extends Application
 	PackageManager pm;
 	AppInfoStorageCenter AISC;
 	MainActivity MA;	// set in MainActivity.onCreate()
+	SettingsActivity SA;
 	
 	@Override
 	public void onCreate()

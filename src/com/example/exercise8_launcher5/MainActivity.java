@@ -23,7 +23,7 @@ public class MainActivity extends FragmentActivity
 		
 		// 去除顶部的标题栏, already set in the manifest.xml
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.main_activity);
 		
 		deskTop = new DeskTop(this);
 		listApps = new ListApps(this);

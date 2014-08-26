@@ -68,7 +68,7 @@
         
 		<activity
             android:name="com.example.exercise8_launcher5.SettingsActivity"
-            android:label="@string/settings_activity_title" >
+            android:label="@string/settings_title" >
         </activity>
         
     </application>

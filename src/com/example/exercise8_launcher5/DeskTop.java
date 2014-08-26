@@ -2,7 +2,9 @@ package com.example.exercise8_launcher5;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,17 +20,26 @@ import android.widget.LinearLayout;
 
 public class DeskTop
 {
+	MainActivity MA;
 	LinearLayout mainLayout;
 	GridView gridView;	// the content of the layout
-	MainActivity MA;
+	int columnNum;
 	
 	public DeskTop(MainActivity ma) 
 	{
 		MA = ma;
+		
+		// get the columnNum stored by the SettingsActivity
+		SharedPreferences preference = PreferenceManager
+				.getDefaultSharedPreferences(MA.getLauncherApplication());
+		String colNumStr = preference.getString("desktop_column_number", "4");
+		columnNum = Integer.parseInt(colNumStr);
+		
 		LayoutInflater li = (LayoutInflater)
 				MA.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mainLayout = (LinearLayout) li.inflate(R.layout.fragment_grid, null);
+		mainLayout = (LinearLayout) li.inflate(R.layout.desktop, null);
 		gridView = (GridView)mainLayout.findViewById(R.id.gridview);
+		gridView.setNumColumns(columnNum);
 		gridView.setAdapter(new DeskTop.iGridAdapter(MA));
 	}
 	
@@ -57,7 +68,7 @@ public class DeskTop
 			int screenWidth=wm.getDefaultDisplay().getWidth();	//手机屏幕的宽度
 			@SuppressWarnings("unused")
 			int screenHeight=wm.getDefaultDisplay().getHeight();	//手机屏幕的高度
-			iconWidth = iconHeight = (int)screenWidth / 4;
+			iconWidth = iconHeight = (int)screenWidth / columnNum;
 			
 			deskTopAppList = MA.getLauncherApplication().AISC.deskTopApps;
 		}

@@ -209,12 +209,13 @@ public class MainActivityFragments
 				@Override
 				public boolean onMenuItemClick(MenuItem arg0) 
 				{
-					ListAppSelectDialog dialog = new ListAppSelectDialog(MA);
+					ListAppsSelectDialog dialog 
+						= new ListAppsSelectDialog(MA.getLauncherApplication(), MA);
 					dialog.show();
 					return true;
 				}
 			});
-			menu.add("列表设置")
+			menu.add("软件设置")
 				.setOnMenuItemClickListener(new OnMenuItemClickListener()
 			{	
 				@Override

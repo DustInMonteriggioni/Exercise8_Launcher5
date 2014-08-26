@@ -2,8 +2,11 @@ package com.example.exercise8_launcher5;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,19 +21,19 @@ import android.widget.TextView;
 
 public class ListApps
 {
+	MainActivity MA;
 	LinearLayout mainLayout;
 	// the contents of the layout
 	ImageView search, settings;
 	ListView listView;
-	
-	MainActivity MA;
+	int textColor;
 	
 	public ListApps(MainActivity ma) 
 	{
 		MA = ma;
 		LayoutInflater li = (LayoutInflater)
 				MA.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mainLayout = (LinearLayout) li.inflate(R.layout.fragment_linear, null);
+		mainLayout = (LinearLayout) li.inflate(R.layout.listapps, null);
 		
 		search = (ImageView)mainLayout.findViewById(R.id.search);
 		search.setOnClickListener(new OnClickListener()
@@ -70,6 +73,11 @@ public class ListApps
 				MA.startActivity(intent);
 			}
 		});
+		
+		SharedPreferences preference = PreferenceManager
+				.getDefaultSharedPreferences(MA.getLauncherApplication());
+		String colorStr = preference.getString("listapps_textcolor", "black");
+		textColor = Color.parseColor(colorStr);
 		
 		listView = (ListView)mainLayout.findViewById(R.id.listview);
 		listView.setAdapter(new ListApps.iListAdapter(MA));
@@ -120,7 +128,7 @@ public class ListApps
 			// at start, the app_row in the position is empty, thus convertView == null
 			if (convertView == null) // entered when the row is created
 			{	LayoutInflater vi = (LayoutInflater)MA.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				convertView = vi.inflate(R.layout.app_row, null);
+				convertView = vi.inflate(R.layout.app_row_listapps, null);
 				convertView.setClickable(true);
 			}
 			
@@ -131,6 +139,7 @@ public class ListApps
 			icon.setBounds(0, 0, iconWidth, iconHeight);
 			TextView appRow = (TextView)convertView.findViewById(R.id.appInfo); 
 			appRow.setText(appInfo.appName);
+			appRow.setTextColor(textColor);
 			appRow.setCompoundDrawables(icon, null, null, null); //…Ë÷√◊ÛÕº±Í
 			appRow.setOnClickListener(new OnClickListener() 
 			{	

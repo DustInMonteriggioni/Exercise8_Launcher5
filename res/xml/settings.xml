@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen  
+	xmlns:android="http://schemas.android.com/apk/res/android" 
+	android:title="@string/settings_title" > 
+	<PreferenceCategory android:title="@string/settings_desktop_title" >
+        <ListPreference
+            android:key="desktop_column_number"
+            android:title="@string/settings_desktop_column_number_title"
+            android:dialogTitle="@string/settings_desktop_column_number_title"
+            android:entries="@array/settings_desktop_column_number_list"
+            android:entryValues="@array/settings_desktop_column_number_list"
+            android:defaultValue="@string/settings_desktop_column_number_default" />
+        <ListPreference 
+            android:key="desktop_longclick_action"
+            android:title="@string/settings_desktop_longclick_action_title"
+            android:dialogTitle="@string/settings_desktop_longclick_action_title"
+            android:entries="@array/settings_desktop_longclick_action_list"
+            android:entryValues="@array/settings_desktop_longclick_action_list"
+            android:defaultValue="@string/settings_desktop_longclick_action_default" />
+    </PreferenceCategory>
+    
+	<PreferenceCategory android:title="@string/settings_listapps_title" >
+	    <ListPreference 
+	        android:key="listapps_textcolor" 
+	        android:title="@string/settings_listapps_textcolor_title"
+	        android:dialogTitle="@string/settings_listapps_textcolor_title"
+	        android:entries="@array/settings_listapps_textcolor_list"
+	        android:entryValues="@array/settings_listapps_textcolor_values"
+	        android:defaultValue="@string/settings_listapps_textcolor_default" />
+	    <Preference
+	        android:key="listapps_shown_app_select"
+	        android:title="@string/settings_listapps_shown_app_select_title" />
+	    <Preference
+	        android:key="listapps_refresh"
+	        android:title="@string/settings_listapps_refresh_listapps_title" />
+	</PreferenceCategory>
+    
+    
+</PreferenceScreen>
