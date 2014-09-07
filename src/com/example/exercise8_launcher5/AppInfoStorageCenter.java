@@ -13,7 +13,7 @@ public class AppInfoStorageCenter
 	AppInfoList deskTopApps;
 	AppInfoList listApps;	// the shown ones
 	
-	MainActivity MA;
+	LauncherApplication LA;
 	PackageManager pm;
 	
 	final static int ADD_APP = 0;
@@ -25,6 +25,7 @@ public class AppInfoStorageCenter
 	
 	public AppInfoStorageCenter(LauncherApplication la)
 	{	
+		LA = la;
 		pm = la.pm;
 		
 		DIR_NAME = Environment.getExternalStorageDirectory().getPath()
@@ -108,5 +109,6 @@ public class AppInfoStorageCenter
 		deskTopApps.writeIntoFile(DIR_NAME + DESKTOP_APPS_FILENAME);
 		listApps.writeIntoFile(DIR_NAME + LIST_APPS_FILENAME);
 	}
+	
 	
 }

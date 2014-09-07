@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.MenuItem.OnMenuItemClickListener;
+import android.widget.Toast;
 
 
 public class MainActivityFragments
@@ -58,12 +59,14 @@ public class MainActivityFragments
 		public iFragmentPagerAdapter(FragmentManager fm) 
 		{	super(fm);	}
 
+		/**
+		 * getItem() is called to instantiate the fragment for the given page.
+		 * Return a DummySectionFragment (defined as a static inner class below)
+		 * with the page number as its lone argument.
+		 */
 		@Override
 		public Fragment getItem(int position) 
 		{
-			// getItem() is called to instantiate the fragment for the given page.
-			// Return a DummySectionFragment (defined as a static inner class
-			// below) with the page number as its lone argument.
 			iFragment fragment = new iFragment();
 			Bundle args = new Bundle();
 			args.putInt(iFragment.ARG_SECTION_NUMBER, position + 1);
@@ -151,7 +154,10 @@ public class MainActivityFragments
 				@Override
 				public boolean onMenuItemClick(MenuItem arg0) 
 				{
-					return false;
+					Toast.makeText(MA, 
+						"由于这个功能工作量较大且已在列表菜单中实现过了，因此请从列表长按菜单中添加^.0", 
+						Toast.LENGTH_LONG).show();
+					return true;
 				}
 			});
 			menu.add("桌面设置")

@@ -66,6 +66,12 @@
 		    </intent-filter>
 		</receiver>
         
+		<provider
+		    android:name="com.example.exercise8_launcher5.AppInfoProvider" 
+		    android:authorities="com.example.exercise8_launcher5.AppInfoStorageCenter"
+		    android:exported="false" >
+		</provider>	
+			
 		<activity
             android:name="com.example.exercise8_launcher5.SettingsActivity"
             android:label="@string/settings_title" >

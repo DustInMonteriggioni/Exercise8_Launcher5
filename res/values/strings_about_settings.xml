@@ -20,7 +20,7 @@
 	    
     <string name="settings_listapps_title">程序列表设置</string>
     	<string name="settings_listapps_textcolor_title">字体颜色</string>
-    	<string name="settings_listapps_textcolor_default">黑</string>
+    	<string name="settings_listapps_textcolor_default">black</string>
     	<string-array name="settings_listapps_textcolor_list">
     	    <item>黑</item>
     	    <item>白</item>

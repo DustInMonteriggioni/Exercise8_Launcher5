@@ -13,6 +13,9 @@ public class MainActivity extends FragmentActivity
 	
 	WallPaperManager wpm;
 	
+	int screenWidth;
+	int screenHeight;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -20,6 +23,8 @@ public class MainActivity extends FragmentActivity
 		
 		LA = (LauncherApplication)this.getApplication();
 		LA.MA = this;
+		
+		setScreenWidthAndHeight();
 		
 		// 去除顶部的标题栏, already set in the manifest.xml
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -44,6 +49,12 @@ public class MainActivity extends FragmentActivity
 	{	
 		//LA.AISC.writeIntoFiles();
 		super.onStop();
+	}
+	
+	private void setScreenWidthAndHeight()
+	{	
+		screenWidth = getResources().getDisplayMetrics().widthPixels;	//手机屏幕的宽度
+		screenHeight = getResources().getDisplayMetrics().heightPixels;	//手机屏幕的高度
 	}
 	
 	public LauncherApplication getLauncherApplication()

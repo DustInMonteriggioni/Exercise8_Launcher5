@@ -7,7 +7,6 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 @SuppressWarnings("deprecation")
@@ -39,6 +38,7 @@ public class SettingsActivity extends PreferenceActivity
 			{
 				int columnNum = Integer.parseInt(obj.toString());
 				LA.MA.deskTop.gridView.setNumColumns(columnNum);
+				LA.MA.deskTop.columnNum = columnNum;
 				LA.MA.deskTop.update();
 				return true;
 			}
@@ -50,7 +50,8 @@ public class SettingsActivity extends PreferenceActivity
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object obj)
 			{
-				Log.i("", "testing: deskTopLongClickAction" + obj.toString());
+				LA.MA.deskTop.longClickEvent = obj.toString();
+				LA.MA.deskTop.update();
 				return true;
 			}
 		});

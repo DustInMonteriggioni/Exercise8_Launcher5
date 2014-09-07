@@ -19,5 +19,6 @@ public class LauncherApplication extends Application
 		pm = this.getPackageManager();
 		AISC = new AppInfoStorageCenter(this);
 		AISC.readFromFiles();
+	
 	}
 }

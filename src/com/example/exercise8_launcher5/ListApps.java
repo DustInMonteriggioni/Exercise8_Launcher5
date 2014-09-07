@@ -3,14 +3,12 @@ package com.example.exercise8_launcher5;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -36,49 +34,10 @@ public class ListApps
 		mainLayout = (LinearLayout) li.inflate(R.layout.listapps, null);
 		
 		search = (ImageView)mainLayout.findViewById(R.id.search);
-		search.setOnClickListener(new OnClickListener()
-		{	
-			@Override
-			public void onClick(View arg0)
-			{
-				for (AppInfo appInfo : MA.getLauncherApplication().AISC.allApps)
-					if (appInfo.appName.equals("搜索")
-						|| appInfo.appName.equalsIgnoreCase("search"))
-					{	launchSearchbox(appInfo.packageName);
-						return;
-					}
-				// not found by name
-				for (AppInfo appInfo : MA.getLauncherApplication().AISC.allApps)
-					if (appInfo.packageName.contains("searchbox"))
-					{	launchSearchbox(appInfo.packageName);
-						return;
-					}
-			}
-			
-			private void launchSearchbox(String thePackageName)
-			{	
-				Intent intent = 
-						MA.getPackageManager().getLaunchIntentForPackage(thePackageName);
-				MA.startActivity(intent); 
-			}
-		});
-		
 		settings = (ImageView)mainLayout.findViewById(R.id.settings);
-		settings.setOnClickListener(new OnClickListener() 
-		{
-			@Override
-			public void onClick(View arg0) 
-			{
-				Intent intent = new Intent(MA, SettingsActivity.class);
-				MA.startActivity(intent);
-			}
-		});
+		setOnClickListenersOfSearchAndSettings();
 		
-		SharedPreferences preference = PreferenceManager
-				.getDefaultSharedPreferences(MA.getLauncherApplication());
-		String colorStr = preference.getString("listapps_textcolor", "black");
-		textColor = Color.parseColor(colorStr);
-		
+		textColor = getColorPreference();
 		listView = (ListView)mainLayout.findViewById(R.id.listview);
 		listView.setAdapter(new ListApps.iListAdapter(MA));
 	}
@@ -86,6 +45,59 @@ public class ListApps
 	public void update()
 	{	
 		listView.setAdapter(new ListApps.iListAdapter(MA));
+	}
+	
+	
+	private int getColorPreference()
+	{	
+		SharedPreferences preference = PreferenceManager
+				.getDefaultSharedPreferences(MA.getLauncherApplication());
+		String colorStr = preference.getString("listapps_textcolor", "black");
+		return Color.parseColor(colorStr);
+	}
+	
+	private String findPackageNameForSearch()
+	{	
+		// try to find by appName
+		for (AppInfo appInfo : MA.getLauncherApplication().AISC.allApps)
+			if (appInfo.appName.equals("搜索") || appInfo.appName.equalsIgnoreCase("search"))
+				return appInfo.packageName;
+		// not found by appName, judge by packageName
+		for (AppInfo appInfo : MA.getLauncherApplication().AISC.allApps)
+			if (appInfo.packageName.contains("searchbox"))
+				return appInfo.packageName;
+		// still not found
+		return "";	// not null to distinguish from not proceed finding
+	}
+	
+	private void setOnClickListenersOfSearchAndSettings()
+	{	
+		search.setOnClickListener(new OnClickListener()
+		{	
+			String packageName = null;
+			
+			@Override
+			public void onClick(View view)
+			{
+				if (packageName == null)
+					findPackageNameForSearch();
+				if ( !packageName.equals("") )	// found search in the phone
+				{	Intent intent = 
+							MA.getPackageManager().getLaunchIntentForPackage(packageName);
+					MA.startActivity(intent); 
+				}
+			}
+		});
+		
+		settings.setOnClickListener(new OnClickListener() 
+		{
+			@Override
+			public void onClick(View view) 
+			{
+				Intent intent = new Intent(MA, SettingsActivity.class);
+				MA.startActivity(intent);
+			}
+		});
 	}
 	
 	
@@ -99,17 +111,10 @@ public class ListApps
 		AppInfoList listApps_shown;
 		MainActivity MA;
 		
-		@SuppressWarnings("deprecation")
 		public iListAdapter(MainActivity ma)
 		{	
 			MA = ma;
-			
-			WindowManager wm = (WindowManager)MA.getSystemService(Context.WINDOW_SERVICE);
-			@SuppressWarnings("unused")
-			int screenWidth=wm.getDefaultDisplay().getWidth();	//手机屏幕的宽度
-			int screenHeight=wm.getDefaultDisplay().getHeight();	//手机屏幕的高度
-			iconWidth = iconHeight = (int)screenHeight / 10;
-			
+			iconWidth = iconHeight = MA.screenHeight / 10;
 			listApps_shown = MA.getLauncherApplication().AISC.listApps;
 		}
 		
@@ -135,7 +140,6 @@ public class ListApps
 			// set the icon and the appName of the appRow
 			Drawable icon = appInfo.appIcon;
 			// 调用setCompoundDrawables时，必须调用Drawable.setBounds()方法,否则图片不显示
-			//icon.setBounds(0, 0, icon.getMinimumWidth(), icon.getMinimumHeight());
 			icon.setBounds(0, 0, iconWidth, iconHeight);
 			TextView appRow = (TextView)convertView.findViewById(R.id.appInfo); 
 			appRow.setText(appInfo.appName);
@@ -145,10 +149,9 @@ public class ListApps
 			{	
 				public void onClick(View v) 
 				{	
-					String packageName = appInfo.packageName;
-					PackageManager pm = MA.getPackageManager(); 
-					Intent intent = pm.getLaunchIntentForPackage(packageName);
-					MA.startActivity(intent); 
+					Intent intent = MA.getLauncherApplication().pm
+							.getLaunchIntentForPackage(appInfo.packageName);
+					MA.startActivity(intent);
 				}
 			});
 			

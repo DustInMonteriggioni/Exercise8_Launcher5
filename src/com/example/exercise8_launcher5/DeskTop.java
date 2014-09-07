@@ -8,9 +8,10 @@ import android.preference.PreferenceManager;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.DragShadowBuilder;
 import android.view.View.OnDragListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
@@ -24,20 +25,17 @@ public class DeskTop
 	LinearLayout mainLayout;
 	GridView gridView;	// the content of the layout
 	int columnNum;
+	String longClickEvent;
 	
 	public DeskTop(MainActivity ma) 
 	{
 		MA = ma;
-		
-		// get the columnNum stored by the SettingsActivity
-		SharedPreferences preference = PreferenceManager
-				.getDefaultSharedPreferences(MA.getLauncherApplication());
-		String colNumStr = preference.getString("desktop_column_number", "4");
-		columnNum = Integer.parseInt(colNumStr);
-		
 		LayoutInflater li = (LayoutInflater)
 				MA.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mainLayout = (LinearLayout) li.inflate(R.layout.desktop, null);
+		
+		columnNum = getColumnNumPreference();
+		longClickEvent = getLongClickEventPreference();
 		gridView = (GridView)mainLayout.findViewById(R.id.gridview);
 		gridView.setNumColumns(columnNum);
 		gridView.setAdapter(new DeskTop.iGridAdapter(MA));
@@ -47,6 +45,26 @@ public class DeskTop
 	{	
 		gridView.setAdapter(new DeskTop.iGridAdapter(MA));
 	}
+	
+	
+	/**
+	 * get the columnNum stored by the SettingsActivity
+	 */
+	private int getColumnNumPreference()
+	{	
+		SharedPreferences preference = PreferenceManager
+				.getDefaultSharedPreferences(MA.getLauncherApplication());
+		String colNumStr = preference.getString("desktop_column_number", "4");
+		return Integer.parseInt(colNumStr);
+	}
+	
+	private String getLongClickEventPreference()
+	{	
+		SharedPreferences preference = PreferenceManager
+				.getDefaultSharedPreferences(MA.getLauncherApplication());
+		return preference.getString("desktop_longclick_action", "菜单");
+	}
+	
 	
 	
 	
@@ -59,17 +77,12 @@ public class DeskTop
 		AppInfoList deskTopAppList;
 		MainActivity MA;
 		
-		@SuppressWarnings("deprecation")
+		int appDraggedPos;	// the index of the app icon dragged
+		
 		public iGridAdapter(MainActivity ma)
 		{	
 			MA = ma;
-			
-			WindowManager wm = (WindowManager)MA.getSystemService(Context.WINDOW_SERVICE);
-			int screenWidth=wm.getDefaultDisplay().getWidth();	//手机屏幕的宽度
-			@SuppressWarnings("unused")
-			int screenHeight=wm.getDefaultDisplay().getHeight();	//手机屏幕的高度
-			iconWidth = iconHeight = (int)screenWidth / columnNum;
-			
+			iconWidth = iconHeight = MA.screenWidth / columnNum;
 			deskTopAppList = MA.getLauncherApplication().AISC.deskTopApps;
 		}
 		
@@ -82,22 +95,18 @@ public class DeskTop
 		public long getItemId(int position) 
 		{	return position;	}
 
-		public View getView(int position, View convertView, ViewGroup parent)
+		/**
+		 * convertView在iGridAdapter.getView()中没有被重复使用，不过在
+		 * iListAdapter.getView()中重复使用。这是因为 gridView中, position 0的getView()
+		 * 总是被多次调用，导致这里的长按菜单（dialog中的OnClickListener）失效。
+		 * 由于view数量不多因此不重复使用convertView以逃避这一问题
+		 */
+		public View getView(final int position, View convertView, ViewGroup parent)
 		{
 			final AppInfo appInfo = deskTopAppList.get(position);
-			ImageView appIcon;
-			if (convertView == null)
-				appIcon = new ImageView(MA);
-			else
-				appIcon = (ImageView)convertView;
+			// not reuse the convertView. explained above
+			ImageView appIcon = new ImageView(MA);
 			appIcon.setImageDrawable(appInfo.appIcon);
-			
-			// if the app is the 1st, 10th, 11th... use the big icon
-			//if ((position + 1) % 10 == 0 || (position + 1) % 10 == 1)
-			//{	appIcon.setLayoutParams
-			//		(new GridView.LayoutParams(2 * width, 2 * height));
-			//} 
-			//else
 			appIcon.setLayoutParams(new GridView.LayoutParams(iconWidth, iconHeight));
 			// to realize the function of launching
 			appIcon.setOnClickListener(new OnClickListener() 
@@ -112,18 +121,39 @@ public class DeskTop
 				}
 			});
 			
-			// set the long click menu
-			appIcon.setOnCreateContextMenuListener(new DeskTopLongClickMenu(MA, appInfo));
+			if (longClickEvent.equals("菜单"))
+				appIcon.setOnCreateContextMenuListener(new DeskTopLongClickMenu(MA, appInfo));
 			
-			// set OnDragListener
-			appIcon.setOnDragListener(new OnDragListener()
-			{
-				@Override
-				public boolean onDrag(View arg0, DragEvent arg1)
+			if (longClickEvent.equals("拖拽"))
+			{	appIcon.setOnDragListener(new OnDragListener()
+				{	
+					@Override
+					public boolean onDrag(View view, DragEvent event)
+					{
+						// drop at list[position]
+						if (event.getAction() == DragEvent.ACTION_DROP)
+						{	AppInfo appDragged = deskTopAppList.get(appDraggedPos);
+							deskTopAppList.set(appDraggedPos, null);
+							deskTopAppList.add(position, appDragged);
+							deskTopAppList.remove(null);
+							MA.getLauncherApplication().AISC.writeIntoFiles();
+							DeskTop.this.update();
+						}
+						return true;
+					}
+				});
+				appIcon.setOnLongClickListener(new OnLongClickListener()
 				{
-					return true;
-				}
-			});
+					@Override
+					public boolean onLongClick(View view)
+					{
+						appDraggedPos = position;	// list[position] dragged
+						DragShadowBuilder builder = new DragShadowBuilder(view);
+						view.startDrag(null, builder, null, 0);
+						return false;
+					}
+				});
+			}
 			
 			return appIcon;
 		}

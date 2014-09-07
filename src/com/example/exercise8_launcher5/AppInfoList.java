@@ -98,11 +98,8 @@ public class AppInfoList extends ArrayList<AppInfo>
 			{
 				long time1 = 0, time2 = 0;
 				try 
-				{
-					time1 = pm.
-						getPackageInfo(appInfo1.packageName, 0).firstInstallTime;
-					time2 = pm.
-						getPackageInfo(appInfo2.packageName, 0).firstInstallTime;
+				{	time1 = pm.getPackageInfo(appInfo1.packageName, 0).firstInstallTime;
+					time2 = pm.getPackageInfo(appInfo2.packageName, 0).firstInstallTime;
 				}
 				catch (NameNotFoundException e) {e.printStackTrace();}
 				
@@ -128,38 +125,35 @@ public class AppInfoList extends ArrayList<AppInfo>
 			@Override
 			public int compare(AppInfo appInfo1, AppInfo appInfo2)
 			{
-				ComponentName name1 = pm
-					.getLaunchIntentForPackage(appInfo1.packageName)
-					.getComponent();
-				ComponentName name2 = pm
-					.getLaunchIntentForPackage(appInfo2.packageName)
-					.getComponent();
+				ComponentName name1 = 
+						pm.getLaunchIntentForPackage(appInfo1.packageName).getComponent();
+				ComponentName name2 = 
+						pm.getLaunchIntentForPackage(appInfo2.packageName).getComponent();
 				int launchCount1 = 0, launchCount2 = 0;
 				
 				try 
 				{
 					// 获得ServiceManager类
-					Class<?> ServiceManager 
-						= Class.forName("android.os.ServiceManager");
+					Class<?> ServiceManager = Class.forName("android.os.ServiceManager");
 					// 获得ServiceManager的getService方法
-					Method getService 
-						= ServiceManager.getMethod("getService", String.class);
+					Method getService = 
+							ServiceManager.getMethod("getService", String.class);
 					// 调用getService获取RemoteService
-					Object oRemoteService = getService.invoke(null, "usagestats");
+					Object remoteService = getService.invoke(null, "usagestats");
 					// 获得IUsageStats.Stub类 
-					Class<?> cStub = Class
-							.forName("com.android.internal.app.IUsageStats$Stub");
+					Class<?> Stub = 
+							Class.forName("com.android.internal.app.IUsageStats$Stub");
 					// 获得asInterface方法
-					Method asInterface = cStub
-							.getMethod("asInterface", android.os.IBinder.class);
+					Method asInterface = 
+							Stub.getMethod("asInterface", android.os.IBinder.class);
 					//调用asInterface方法获取IUsageStats对象
-					Object oIUsageStats = asInterface.invoke(null, oRemoteService);
+					Object usageStats = asInterface.invoke(null, remoteService);
 					//获得getPkgUsageStats(ComponentName)方法
-					Method getPkgUsageStats = oIUsageStats.getClass()
+					Method getPkgUsageStats = usageStats.getClass()
 							.getMethod("getPkgUsageStats", ComponentName.class);
 					//调用getPkgUsageStats 获取PkgUsageStats对象
-					Object stats1 = getPkgUsageStats.invoke(oIUsageStats, name1);
-					Object stats2 = getPkgUsageStats.invoke(oIUsageStats, name2);
+					Object stats1 = getPkgUsageStats.invoke(usageStats, name1);
+					Object stats2 = getPkgUsageStats.invoke(usageStats, name2);
 					//获得PkgUsageStats类 
 					Class<?> PkgUsageStats 
 						= Class.forName("com.android.internal.os.PkgUsageStats");
