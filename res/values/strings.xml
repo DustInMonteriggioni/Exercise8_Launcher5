@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Exercise8_Launcher5</string>
+    <string name="app_name">MetroLauncher</string>
     <string name="action_settings">Settings</string>
     <string name="choose_apps">选择需要显示的应用程序</string>
     <string name="uninstall_protector_name">软件防护</string>

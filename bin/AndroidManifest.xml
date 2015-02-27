@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.exercise8_launcher5"
+    package="sjtu.se.metrolauncher"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -16,7 +16,7 @@
         android:targetSdkVersion="19" />
     
     <application
-        android:name="com.example.exercise8_launcher5.LauncherApplication"
+        android:name="sjtu.se.metrolauncher.LauncherApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -24,7 +24,7 @@
         
         <!-- android:theme 一行用于去除顶部的标题栏 -->
         <activity
-            android:name="com.example.exercise8_launcher5.MainActivity"
+            android:name="sjtu.se.metrolauncher.MainActivity"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
             <intent-filter>
                 <!-- launch by clicking the icon -->
@@ -38,7 +38,7 @@
         
         <!-- the BroadcastReceiver to receive package add or remove -->
         <receiver 
-        	android:name="com.example.exercise8_launcher5.AppChangeReceiver" >
+        	android:name="sjtu.se.metrolauncher.AppChangeReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
@@ -48,7 +48,7 @@
         
 		<receiver 
 		    android:name=
-		    	"com.example.exercise8_launcher5.UninstallProtector$UninstallReceiver" >
+		    	"sjtu.se.metrolauncher.UninstallProtector$UninstallReceiver" >
 		    <!-- 
 		    android:label="@string/uninstall_protector_name"
 		    android:permission="android.permission.BIND_DEVICE_ADMIN">
@@ -67,13 +67,13 @@
 		</receiver>
         
 		<provider
-		    android:name="com.example.exercise8_launcher5.AppInfoProvider" 
+		    android:name="sjtu.se.metrolauncher.AppInfoProvider" 
 		    android:authorities="com.example.exercise8_launcher5.AppInfoStorageCenter"
 		    android:exported="false" >
 		</provider>	
 			
 		<activity
-            android:name="com.example.exercise8_launcher5.SettingsActivity"
+            android:name="sjtu.se.metrolauncher.SettingsActivity"
             android:label="@string/settings_title" >
         </activity>
         
